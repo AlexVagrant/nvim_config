@@ -1,7 +1,7 @@
 local keymap = vim.keymap
 local nvim_tree = require("nvim-tree")
 local lib = require("nvim-tree.lib")
-local view = require("nvim-tree.view")
+-- local view = require("nvim-tree.view")
 
 local function on_attach(bufnr)
   local api = require('nvim-tree.api')
@@ -142,14 +142,14 @@ local function edit_or_open()
     -- Just copy what's done normally with vsplit
     if node.link_to and not node.nodes then
         require('nvim-tree.actions.node.open-file').fn(action, node.link_to)
-        view.close() -- Close the tree if file was opened
+        -- view.close() -- Close the tree if file was opened
 
     elseif node.nodes ~= nil then
         lib.expand_or_collapse(node)
 
     else
         require('nvim-tree.actions.node.open-file').fn(action, node.absolute_path)
-        view.close() -- Close the tree if file was opened
+        -- view.close() -- Close the tree if file was opened
     end
 
 end
@@ -175,7 +175,7 @@ local function vsplit_preview()
     end
 
     -- Finally refocus on tree if it was lost
-    view.focus()
+    -- view.focus()
 end
 
 local function split_preview()
@@ -198,7 +198,7 @@ local function split_preview()
     end
 
     -- Finally refocus on tree if it was lost
-    view.focus()
+    -- view.focus()
 end
 
 nvim_tree.setup({
