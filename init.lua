@@ -1,23 +1,26 @@
+vim.g.mapleader = ","
+vim.opt.termguicolors = true
+
 require("lazy_conf")
 require('keybinding')
-require("plugin_config")
---require("plugins")
+require('keybinding')
 
 --vim.cmd [[colorscheme catppuccin]]
--- vim.cmd [[colorscheme vscode]]
--- vim.cmd[[colorscheme onelight]]
+--vim.cmd [[colorscheme vscode]]
+--vim.cmd[[colorscheme onelight]]
 --vim.cmd[[colorscheme tokyonight]]
 --vim.cmd[[colorscheme monokai]]
 --vim.cmd[[colorscheme monokai-nightasty]]
 vim.cmd[[colorscheme sonokai]]
--- vim.cmd[[colorscheme dracula]]
+
+--vim.cmd[[colorscheme dracula]]
 --vim.cmd[[colorscheme citruszest]]
 
 vim.cmd('syntax on')
 vim.cmd('filetype plugin indent on')
 
-local set = vim.opt
 
+local set = vim.opt
 set.hidden = true
 set.number = true
 set.encoding = "UTF-8"
