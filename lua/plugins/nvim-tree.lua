@@ -23,7 +23,7 @@ return {
       hijack_unnamed_buffer_when_opening = false,
       open_on_tab = true,
       sort_by = "name",
-      update_cwd = false,
+      update_cwd = true,
       create_in_closed_folder = false,
       sync_root_with_cwd = true,
       view = {
@@ -44,7 +44,7 @@ return {
       },
       hijack_directories = {
         enable = true,
-        auto_open = true,
+        auto_open = false,
       },
       update_focused_file = {
         enable = false,
@@ -123,5 +123,13 @@ return {
     })
 
     vim.api.nvim_set_keymap("n", "<leader>e", ":NvimTreeFindFileToggle<cr>" ,{silent = true, noremap = true})
+
+    vim.api.nvim_create_autocmd("VimEnter", {
+      callback = function()
+        if vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv()[1]) == 1 then
+          vim.cmd("NvimTreeOpen")
+        end
+      end
+    })
   end
 }
