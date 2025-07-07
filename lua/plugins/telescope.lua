@@ -1,4 +1,3 @@
-
 return {
   {
     'nvim-telescope/telescope.nvim',
@@ -80,18 +79,18 @@ return {
       pcall(telescope.load_extension, "ui-select")
 
       local builtin = require('telescope.builtin')
-      vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-      vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-      vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-      vim.keymap.set('n', '<leader>?', builtin.oldfiles, { desc = '[?] Find recently opened files' })
-      vim.keymap.set('n', '<leader><space>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, {desc = '查找文件'})
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, {desc = '全局搜索'})
+      vim.keymap.set('n', '<leader>fb', builtin.buffers, {desc = '查找缓冲区'})
+      vim.keymap.set('n', '<leader>fh', builtin.help_tags, {desc = '查找帮助'})
+      vim.keymap.set('n', '<leader>?', builtin.oldfiles, { desc = '查找最近文件' })
+      vim.keymap.set('n', '<leader><space>', builtin.buffers, { desc = '查找缓冲区' })
       vim.keymap.set('n', '<leader>/', function()
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
           previewer = false,
         })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      end, { desc = '在当前文件搜索' })
 
       local function telescope_live_grep_open_files()
         builtin.live_grep {
@@ -99,12 +98,12 @@ return {
           prompt_title = 'Live Grep in Open Files',
         }
       end
-      vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '在打开的文件中搜索' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = 'Telescope 内置功能' })
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '搜索帮助' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '搜索光标下单词' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '搜索诊断信息' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '恢复上次搜索' })
     end
   },
   { "nvim-telescope/telescope-live-grep-raw.nvim" },

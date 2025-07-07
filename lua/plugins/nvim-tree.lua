@@ -1,4 +1,3 @@
-
 return {
   'nvim-tree/nvim-tree.lua',
   config = function()
@@ -122,7 +121,7 @@ return {
       end
     })
 
-    vim.api.nvim_set_keymap("n", "<leader>e", ":NvimTreeFindFileToggle<cr>" ,{silent = true, noremap = true})
+    vim.api.nvim_set_keymap("n", "<leader>e", ":NvimTreeFindFileToggle<cr>" ,{silent = true, noremap = true, desc = "文件浏览器"})
 
     vim.api.nvim_create_autocmd("VimEnter", {
       callback = function()
