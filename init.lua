@@ -3,7 +3,6 @@ vim.opt.termguicolors = true
 
 require("lazy_conf")
 require('keybinding')
-require('keybinding')
 
 --vim.cmd [[colorscheme catppuccin]]
 --vim.cmd [[colorscheme vscode]]
@@ -77,3 +76,4 @@ vim.o.swapfile = false
 vim.o.relativenumber = true
 
 vim.opt.wrap = true
+

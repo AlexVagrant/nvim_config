@@ -18,6 +18,8 @@ map("n", "<S-l>", "gt", { desc = "下一个标签页" })
 map("n", "<leader>v", '"+gp', { desc = "粘贴剪贴板内容" })
 map("n", "<leader>c", '"+y', { desc = "复制到剪贴板" })
 map("n", "<leader>t", ':tabnew<CR>', { desc = "新建标签页" })
+map("v", "<leader>c", '"+y', { desc = "复制到剪贴板" })
+
 
 map("i", "jj", "<ESC>", { desc = "退出插入模式" })
 
