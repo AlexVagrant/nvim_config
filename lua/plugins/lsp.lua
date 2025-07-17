@@ -90,7 +90,7 @@ return {
           local vue_package = mason_registry.get_package("vue-language-server")
           
           local init_options = {}
-          if vue_package:is_installed() then
+          if vue_package and vue_package:is_installed() then
             local vue_language_server_path = vue_package:get_install_path()
             .. "/node_modules/@vue/language-server"
             init_options = {
