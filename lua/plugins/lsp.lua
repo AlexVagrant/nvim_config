@@ -50,6 +50,7 @@ return {
           "lua_ls",
           "rust_analyzer",
           "volar",
+          "vue-language-server",
           "ts_ls",
           "solidity",
           "eslint",
@@ -83,27 +84,37 @@ return {
             },
           })
         end,
+        
+        ["ts_ls"] = function()
+          local mason_registry = require("mason-registry")
+          local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
+          .. "/node_modules/@vue/language-server"
+
+          lspconfig.ts_ls.setup({
+            on_attach = on_attach,
+            flags = lsp_flags,
+            filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
+            cmd = { "typescript-language-server", "--stdio" },
+            init_options = {
+                plugins = {
+                    {
+                        name = "@vue/typescript-plugin",
+                        location = vue_language_server_path,
+                        languages = { "vue" },
+                    },
+                },
+            },
+          })
+        end,
         ["volar"] = function()
           lspconfig.volar.setup({
             on_attach = on_attach,
             flags = lsp_flags,
-            filetypes = { "vue" },
             init_options = {
-              vue = {
-                hybridMode = false,
-              },
               typescript = {
-                tsdk = "/usr/local/lib/node_modules/typescript/lib",
-              },
-            },
-          })
-        end,
-        ["ts_ls"] = function()
-          lspconfig.ts_ls.setup({
-            on_attach = on_attach,
-            flags = lsp_flags,
-            filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-            cmd = { "typescript-language-server", "--stdio" },
+                tsdk = vim.fn.getcwd() .. '/node_modules/typescript/lib'
+              }
+            }
           })
         end,
         ["eslint"] = function()
