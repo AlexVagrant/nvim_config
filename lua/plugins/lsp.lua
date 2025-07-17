@@ -87,23 +87,29 @@ return {
         
         ["ts_ls"] = function()
           local mason_registry = require("mason-registry")
-          local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
-          .. "/node_modules/@vue/language-server"
+          local vue_package = mason_registry.get_package("vue-language-server")
+          
+          local init_options = {}
+          if vue_package:is_installed() then
+            local vue_language_server_path = vue_package:get_install_path()
+            .. "/node_modules/@vue/language-server"
+            init_options = {
+              plugins = {
+                {
+                  name = "@vue/typescript-plugin",
+                  location = vue_language_server_path,
+                  languages = { "vue" },
+                },
+              },
+            }
+          end
 
           lspconfig.ts_ls.setup({
             on_attach = on_attach,
             flags = lsp_flags,
             filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
             cmd = { "typescript-language-server", "--stdio" },
-            init_options = {
-                plugins = {
-                    {
-                        name = "@vue/typescript-plugin",
-                        location = vue_language_server_path,
-                        languages = { "vue" },
-                    },
-                },
-            },
+            init_options = init_options,
           })
         end,
         ["volar"] = function()
