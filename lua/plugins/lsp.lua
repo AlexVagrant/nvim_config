@@ -1,12 +1,15 @@
-
 return {
   {
     'neovim/nvim-lspconfig',
+    dependencies = {
+      { "williamboman/mason.nvim", commit = "4da89f3" },
+      { "williamboman/mason-lspconfig.nvim", commit = "1a31f82" },
+    },
     config = function()
       local lspconfig = require('lspconfig')
       local opts = { noremap = true, silent = true }
       local keymap = vim.keymap
-      vim.lsp.set_log_level("trace")
+      vim.lsp.set_log_level("error")
       keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
       keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
       keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
@@ -36,89 +39,8 @@ return {
         debounce_text_changes = 150,
       }
 
-      lspconfig['clangd'].setup {
-        on_attach = on_attach,
-        flags = lsp_flags,
-      }
-      lspconfig['solidity'].setup {
-        on_attach = on_attach,
-        flags = lsp_flags,
-      }
-      lspconfig['yamlls'].setup {
-        on_attach = on_attach,
-        flags = lsp_flags,
-      }
-      lspconfig['cssls'].setup {
-        on_attach = on_attach,
-        flags = lsp_flags,
-      }
-      lspconfig['lua_ls'].setup({
-        on_attach = on_attach,
-        settings = {
-          Lua = {
-            diagnostics = {
-              globals = { "vim" },
-            },
-            workspace = {
-              library = {
-                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-              },
-            },
-          },
-        },
-      })
-      lspconfig['volar'].setup {
-        filetypes = {'vue'},
-        init_options = {
-          vue = {
-            hybridMode = false,
-          },
-          typescript = {
-            tsdk = '/usr/local/lib/node_modules/typescript/lib'
-          }
-        },
-        on_attach = on_attach,
-        flags = lsp_flags,
-      }
-      lspconfig['ts_ls'].setup {
-        on_attach = on_attach,
-        filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-        cmd = { "typescript-language-server", "--stdio" },
-      }
-      lspconfig['eslint'].setup {
-        on_attach = function(client, bufnr)
-          on_attach(client, bufnr)
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format({
-                filter = function(c)
-                  return c.name == "eslint"
-                end,
-                bufnr = bufnr,
-              })
-            end,
-          })
-        end,
-      }
-      lspconfig['tailwindcss'].setup {
-        on_attach = on_attach,
-        filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascriptreact", "reason", "rescript", "typescriptreact", "vue", "svelte", "templ" },
-        cmd= { "tailwindcss-language-server", "--stdio" }
-      }
-    end
-  },
-  {
-    "williamboman/mason.nvim",
-    commit = "4da89f3",
-    config = function ()
       require("mason").setup()
-    end
-  },
-  {
-    "williamboman/mason-lspconfig.nvim",
-    commit = "1a31f82",
-    config = function ()
+
       require("mason-lspconfig").setup({
         ensure_installed = {
           "clangd",
@@ -135,6 +57,83 @@ return {
         },
         automatic_installation = true,
       })
+
+      require("mason-lspconfig").setup_handlers({
+        function(server_name)
+          lspconfig[server_name].setup({
+            on_attach = on_attach,
+            flags = lsp_flags,
+          })
+        end,
+        ["lua_ls"] = function()
+          lspconfig.lua_ls.setup({
+            on_attach = on_attach,
+            flags = lsp_flags,
+            settings = {
+              Lua = {
+                diagnostics = {
+                  globals = { "vim" },
+                },
+                workspace = {
+                  library = {
+                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                  },
+                },
+              },
+            },
+          })
+        end,
+        ["volar"] = function()
+          lspconfig.volar.setup({
+            on_attach = on_attach,
+            flags = lsp_flags,
+            filetypes = { "vue" },
+            init_options = {
+              vue = {
+                hybridMode = false,
+              },
+              typescript = {
+                tsdk = "/usr/local/lib/node_modules/typescript/lib",
+              },
+            },
+          })
+        end,
+        ["ts_ls"] = function()
+          lspconfig.ts_ls.setup({
+            on_attach = on_attach,
+            flags = lsp_flags,
+            filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+            cmd = { "typescript-language-server", "--stdio" },
+          })
+        end,
+        ["eslint"] = function()
+          lspconfig.eslint.setup({
+            on_attach = function(client, bufnr)
+              on_attach(client, bufnr)
+              vim.api.nvim_create_autocmd("BufWritePre", {
+                buffer = bufnr,
+                callback = function()
+                  vim.lsp.buf.format({
+                    filter = function(c)
+                      return c.name == "eslint"
+                    end,
+                    bufnr = bufnr,
+                  })
+                end,
+              })
+            end,
+            filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+          })
+        end,
+        ["tailwindcss"] = function()
+          lspconfig.tailwindcss.setup({
+            on_attach = on_attach,
+            flags = lsp_flags,
+            filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascriptreact", "reason", "rescript", "typescriptreact", "vue", "svelte", "templ" },
+            cmd = { "tailwindcss-language-server", "--stdio" },
+          })
+        end,
+      })
     end
-  },
+  }
 }
