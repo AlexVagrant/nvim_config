@@ -1,12 +1,13 @@
 return {
   {
-    'neovim/nvim-lspconfig',
+    -- 使用 Mason 来管理 LSP 服务器安装
+    "williamboman/mason.nvim",
+    commit = "4da89f3",
     dependencies = {
-      { "williamboman/mason.nvim", commit = "4da89f3" },
       { "williamboman/mason-lspconfig.nvim", commit = "1a31f82" },
     },
     config = function()
-      local lspconfig = require('lspconfig')
+      -- 全局键位绑定
       local opts = { noremap = true, silent = true }
       local keymap = vim.keymap
       vim.lsp.set_log_level("error")
@@ -15,7 +16,11 @@ return {
       keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
       keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-      local on_attach = function(client, bufnr)
+      -- LSP 附加回调函数，用于设置缓冲区相关的键位绑定
+      local on_attach = function(args)
+        local bufnr = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
         keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
@@ -35,10 +40,12 @@ return {
         keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
       end
 
-      local lsp_flags = {
-        debounce_text_changes = 150,
-      }
+      -- 为所有 LSP 服务器设置通用的 LspAttach 自动命令
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = on_attach,
+      })
 
+      -- 初始化 Mason
       require("mason").setup()
 
       require("mason-lspconfig").setup({
@@ -58,82 +65,81 @@ return {
         automatic_installation = true,
       })
 
-      require("mason-lspconfig").setup_handlers({
-        function(server_name)
-          lspconfig[server_name].setup({
-            on_attach = on_attach,
-            flags = lsp_flags,
-          })
-        end,
-        ["lua_ls"] = function()
-          lspconfig.lua_ls.setup({
-            on_attach = on_attach,
-            flags = lsp_flags,
-            settings = {
-              Lua = {
-                diagnostics = {
-                  globals = { "vim" },
-                },
-                workspace = {
-                  library = {
-                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                  },
-                },
+      -- 配置 lua_ls（Lua 语言服务器）
+      vim.lsp.config('lua_ls', {
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim" },
+            },
+            workspace = {
+              library = {
+                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
               },
             },
-          })
-        end,
-        
-        ["ts_ls"] = function()
-          lspconfig.ts_ls.setup({
-            on_attach = on_attach,
-            flags = lsp_flags,
-            filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-            cmd = { "typescript-language-server", "--stdio" },
-          })
-        end,
-        ["volar"] = function()
-          lspconfig.volar.setup {
-            filetypes = {'vue'},
-            init_options = {
-              vue = {
-                hybridMode = false,
-              },
-              typescript = {
-                tsdk = '/usr/local/lib/node_modules/typescript/lib'
-                -- tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
-              }
-            },
-            on_attach = on_attach,
-            flags = lsp_flags,
+          },
+        },
+      })
+
+      -- 配置 ts_ls（TypeScript 语言服务器）
+      vim.lsp.config('ts_ls', {
+        filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+        cmd = { "typescript-language-server", "--stdio" },
+      })
+
+      -- 配置 volar（Vue 语言服务器）
+      vim.lsp.config('volar', {
+        filetypes = {'vue'},
+        init_options = {
+          vue = {
+            hybridMode = false,
+          },
+          typescript = {
+            tsdk = '/usr/local/lib/node_modules/typescript/lib'
+            -- tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
           }
+        },
+      })
+
+      -- 配置 eslint（需要特殊的保存时格式化处理）
+      vim.lsp.config('eslint', {
+        filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+      })
+
+      -- 为 eslint 添加保存时自动格式化
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.name == "eslint" then
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer = args.buf,
+              callback = function()
+                vim.lsp.buf.format({
+                  filter = function(c)
+                    return c.name == "eslint"
+                  end,
+                  bufnr = args.buf,
+                })
+              end,
+            })
+          end
         end,
-        ["eslint"] = function()
-          lspconfig.eslint.setup({
-            on_attach = function(client, bufnr)
-              on_attach(client, bufnr)
-              vim.api.nvim_create_autocmd("BufWritePre", {
-                buffer = bufnr,
-                callback = function()
-                  vim.lsp.buf.format({
-                    filter = function(c)
-                      return c.name == "eslint"
-                    end,
-                    bufnr = bufnr,
-                  })
-                end,
-              })
-            end,
-            filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-          })
-        end,
-        ["tailwindcss"] = function()
-          lspconfig.tailwindcss.setup({
-            on_attach = on_attach,
-            flags = lsp_flags,
-            filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascriptreact", "reason", "rescript", "typescriptreact", "vue", "svelte", "templ" },
-            cmd = { "tailwindcss-language-server", "--stdio" },
-          })
+      })
+
+      -- 配置 tailwindcss
+      vim.lsp.config('tailwindcss', {
+        filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascriptreact", "reason", "rescript", "typescriptreact", "vue", "svelte", "templ" },
+        cmd = { "tailwindcss-language-server", "--stdio" },
+      })
+
+      -- 使用 mason-lspconfig 的处理器来自动启用所有已安装的服务器
+      require("mason-lspconfig").setup_handlers({
+        -- 默认处理器：为所有服务器启用 LSP
+        function(server_name)
+          -- rust_analyzer 由 rustaceanvim 管理，跳过
+          if server_name ~= "rust_analyzer" then
+            vim.lsp.enable(server_name)
+          end
         end,
       })
     end
