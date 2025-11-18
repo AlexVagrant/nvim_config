@@ -4,6 +4,7 @@ return {
     "williamboman/mason.nvim",
     commit = "4da89f3",
     dependencies = {
+      { "neovim/nvim-lspconfig" },
       { "williamboman/mason-lspconfig.nvim", commit = "1a31f82" },
     },
     config = function()
@@ -56,8 +57,8 @@ return {
           "html",
           "lua_ls",
           "rust_analyzer",
+          "vtsls",
           "volar",
-          "ts_ls",
           "solidity",
           "eslint",
           "tailwindcss",
@@ -81,30 +82,35 @@ return {
         },
       })
 
-      -- 配置 ts_ls（TypeScript 语言服务器）
-      vim.lsp.config('ts_ls', {
-        filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-        cmd = { "typescript-language-server", "--stdio" },
-      })
-
-      -- 配置 volar（Vue 语言服务器）
-      vim.lsp.config('volar', {
-        filetypes = {'vue'},
-        init_options = {
-          vue = {
-            hybridMode = false,
+      local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+      local tsserver_filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' }
+      local vue_plugin = {
+        name = '@vue/typescript-plugin',
+        location = vue_language_server_path,
+        languages = { 'vue' },
+        configNamespace = 'typescript',
+      }
+      local vtsls_config = {
+        settings = {
+          vtsls = {
+            tsserver = {
+              globalPlugins = {
+                vue_plugin,
+              },
+            },
           },
-          typescript = {
-            tsdk = '/usr/local/lib/node_modules/typescript/lib'
-            -- tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
-          }
         },
-      })
+        filetypes = tsserver_filetypes,
+      }
+
+      -- nvim 0.11 or above
+      vim.lsp.config('vtsls', vtsls_config)
+      vim.lsp.enable({'vtsls', 'vue_ls'}) -- If using `ts_ls` replace `vtsls` to `ts_ls`
 
       -- 配置 eslint（需要特殊的保存时格式化处理）
-      vim.lsp.config('eslint', {
-        filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-      })
+      -- vim.lsp.config('eslint', {
+      --  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+      -- })
 
       -- 为 eslint 添加保存时自动格式化
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -127,10 +133,10 @@ return {
       })
 
       -- 配置 tailwindcss
-      vim.lsp.config('tailwindcss', {
-        filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascriptreact", "reason", "rescript", "typescriptreact", "vue", "svelte", "templ" },
-        cmd = { "tailwindcss-language-server", "--stdio" },
-      })
+      -- vim.lsp.config('tailwindcss', {
+      -- filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascriptreact", "reason", "rescript", "typescriptreact", "vue", "svelte", "templ" },
+      -- cmd = { "tailwindcss-language-server", "--stdio" },
+      -- })
 
       -- 使用 mason-lspconfig 的处理器来自动启用所有已安装的服务器
       require("mason-lspconfig").setup_handlers({
