@@ -59,9 +59,9 @@ return {
           "rust_analyzer",
           "vtsls",
           "volar",
-          "solidity",
           "eslint",
           "tailwindcss",
+          "jsonls"
         },
         automatic_installation = true,
       })
@@ -107,36 +107,21 @@ return {
       vim.lsp.config('vtsls', vtsls_config)
       vim.lsp.enable({'vtsls', 'vue_ls'}) -- If using `ts_ls` replace `vtsls` to `ts_ls`
 
-      -- 配置 eslint（需要特殊的保存时格式化处理）
-      -- vim.lsp.config('eslint', {
-      --  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-      -- })
+      local base_on_attach = vim.lsp.config.eslint.on_attach
+      vim.lsp.config("eslint", {
+        on_attach = function(client, bufnr)
+          if not base_on_attach then return end
 
-      -- 为 eslint 添加保存时自动格式化
-      vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client and client.name == "eslint" then
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              buffer = args.buf,
-              callback = function()
-                vim.lsp.buf.format({
-                  filter = function(c)
-                    return c.name == "eslint"
-                  end,
-                  bufnr = args.buf,
-                })
-              end,
-            })
-          end
+          base_on_attach(client, bufnr)
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "LspEslintFixAll",
+          })
         end,
       })
 
-      -- 配置 tailwindcss
-      -- vim.lsp.config('tailwindcss', {
-      -- filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascriptreact", "reason", "rescript", "typescriptreact", "vue", "svelte", "templ" },
-      -- cmd = { "tailwindcss-language-server", "--stdio" },
-      -- })
+      vim.lsp.enable('jsonls')
+      vim.lsp.enable('tailwindcss')
 
       -- 使用 mason-lspconfig 的处理器来自动启用所有已安装的服务器
       require("mason-lspconfig").setup_handlers({
