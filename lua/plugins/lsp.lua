@@ -2,10 +2,9 @@ return {
   {
     -- 使用 Mason 来管理 LSP 服务器安装
     "williamboman/mason.nvim",
-    commit = "4da89f3",
     dependencies = {
       { "neovim/nvim-lspconfig" },
-      { "williamboman/mason-lspconfig.nvim", commit = "1a31f82" },
+      { 'mason-org/mason-lspconfig.nvim' },
     },
     config = function()
       -- 全局键位绑定
@@ -22,7 +21,7 @@ return {
         local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         
-        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+        vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
         keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
         keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
@@ -58,7 +57,7 @@ return {
           "lua_ls",
           "rust_analyzer",
           "vtsls",
-          "volar",
+          "vue_ls",
           "eslint",
           "tailwindcss",
           "jsonls"
@@ -124,15 +123,15 @@ return {
       vim.lsp.enable('tailwindcss')
 
       -- 使用 mason-lspconfig 的处理器来自动启用所有已安装的服务器
-      require("mason-lspconfig").setup_handlers({
-        -- 默认处理器：为所有服务器启用 LSP
-        function(server_name)
-          -- rust_analyzer 由 rustaceanvim 管理，跳过
-          if server_name ~= "rust_analyzer" then
-            vim.lsp.enable(server_name)
-          end
-        end,
-      })
+      -- require("mason-lspconfig").setup_handlers({
+      --   -- 默认处理器：为所有服务器启用 LSP
+      --   function(server_name)
+      --     -- rust_analyzer 由 rustaceanvim 管理，跳过
+      --     if server_name ~= "rust_analyzer" then
+      --       vim.lsp.enable(server_name)
+      --     end
+      --   end,
+      -- })
     end
   }
 }
