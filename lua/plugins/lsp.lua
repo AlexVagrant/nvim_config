@@ -60,7 +60,8 @@ return {
           "vue_ls",
           "eslint",
           "tailwindcss",
-          "jsonls"
+          "jsonls",
+          "pylsp"
         },
         automatic_installation = true,
       })
@@ -121,6 +122,8 @@ return {
 
       vim.lsp.enable('jsonls')
       vim.lsp.enable('tailwindcss')
+
+      vim.lsp.enable('pylsp')
 
       -- 使用 mason-lspconfig 的处理器来自动启用所有已安装的服务器
       -- require("mason-lspconfig").setup_handlers({
