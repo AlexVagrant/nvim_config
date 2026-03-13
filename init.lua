@@ -2,6 +2,36 @@ vim.g.mapleader = ","
 vim.opt.termguicolors = true
 
 require("lazy_conf")
+
+-- 自动更新 Lazy 和 Mason（每天一次）
+vim.schedule(function()
+  local cache_dir = vim.fn.stdpath("cache")
+  local last_update_file = cache_dir .. "/lazy_mason_update"
+
+  local function should_update()
+    local f = io.open(last_update_file, "r")
+    if not f then return true end
+    local last_date = f:read("*a")
+    f:close()
+    local today = os.date("%Y-%m-%d")
+    return last_date ~= today
+  end
+
+  local function mark_updated()
+    local f = io.open(last_update_file, "w")
+    if f then
+      f:write(os.date("%Y-%m-%d"))
+      f:close()
+    end
+  end
+
+  if should_update() then
+    vim.cmd("Lazy! sync")
+    vim.cmd("MasonToolsUpdate --install-once")
+    mark_updated()
+  end
+end)
+
 require('keybinding')
 
 vim.cmd[[colorscheme sonokai]]

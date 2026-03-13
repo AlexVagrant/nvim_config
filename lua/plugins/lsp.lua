@@ -5,6 +5,7 @@ return {
     dependencies = {
       { "neovim/nvim-lspconfig" },
       { 'mason-org/mason-lspconfig.nvim' },
+      { 'williamboman/mason-tool-installer.nvim' },
     },
     config = function()
       -- 全局键位绑定
@@ -47,6 +48,10 @@ return {
 
       -- 初始化 Mason
       require("mason").setup()
+
+      require("mason-tool-installer").setup({
+        auto_update = true,
+      })
 
       require("mason-lspconfig").setup({
         ensure_installed = {
