@@ -4,33 +4,42 @@ vim.opt.termguicolors = true
 require("lazy_conf")
 
 -- 自动更新 Lazy 和 Mason（每天一次）
-vim.schedule(function()
-  local cache_dir = vim.fn.stdpath("cache")
-  local last_update_file = cache_dir .. "/lazy_mason_update"
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function()
+    local cache_dir = vim.fn.stdpath("cache")
+    local last_update_file = cache_dir .. "/lazy_mason_update"
 
-  local function should_update()
-    local f = io.open(last_update_file, "r")
-    if not f then return true end
-    local last_date = f:read("*a")
-    f:close()
-    local today = os.date("%Y-%m-%d")
-    return last_date ~= today
-  end
-
-  local function mark_updated()
-    local f = io.open(last_update_file, "w")
-    if f then
-      f:write(os.date("%Y-%m-%d"))
+    local function should_update()
+      local f = io.open(last_update_file, "r")
+      if not f then return true end
+      local last_date = f:read("*a")
       f:close()
+      local today = os.date("%Y-%m-%d")
+      return last_date ~= today
     end
-  end
 
-  if should_update() then
-    vim.cmd("Lazy! sync")
-    vim.cmd("MasonToolsUpdate --install-once")
-    mark_updated()
-  end
-end)
+    local function mark_updated()
+      local f = io.open(last_update_file, "w")
+      if f then
+        f:write(os.date("%Y-%m-%d"))
+        f:close()
+      end
+    end
+
+    if should_update() then
+      -- 使用 Lua API 而不是命令
+      vim.schedule(function()
+        local lazy_ok, lazy = pcall(require, "lazy")
+        if lazy_ok then
+          lazy.sync({ wait = false, show = false })
+        end
+        vim.cmd("silent! MasonToolsUpdate --install-once")
+        mark_updated()
+      end)
+    end
+  end,
+})
 
 require('keybinding')
 

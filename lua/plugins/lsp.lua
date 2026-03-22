@@ -4,8 +4,12 @@ return {
     "williamboman/mason.nvim",
     dependencies = {
       { "neovim/nvim-lspconfig" },
-      { 'mason-org/mason-lspconfig.nvim' },
-      { 'williamboman/mason-tool-installer.nvim' },
+      { 'williamboman/mason-lspconfig.nvim' },
+      { 'WhoIsSethDaniel/mason-tool-installer.nvim', config = function()
+        require("mason-tool-installer").setup({
+          auto_update = true,
+        })
+      end },
     },
     config = function()
       -- 全局键位绑定
@@ -48,10 +52,6 @@ return {
 
       -- 初始化 Mason
       require("mason").setup()
-
-      require("mason-tool-installer").setup({
-        auto_update = true,
-      })
 
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -112,18 +112,15 @@ return {
       vim.lsp.config('vtsls', vtsls_config)
       vim.lsp.enable({'vtsls', 'vue_ls'}) -- If using `ts_ls` replace `vtsls` to `ts_ls`
 
-      local base_on_attach = vim.lsp.config.eslint.on_attach
       vim.lsp.config("eslint", {
         on_attach = function(client, bufnr)
-          if not base_on_attach then return end
-
-          base_on_attach(client, bufnr)
           vim.api.nvim_create_autocmd("BufWritePre", {
             buffer = bufnr,
             command = "LspEslintFixAll",
           })
         end,
       })
+      vim.lsp.enable('eslint')
 
       vim.lsp.enable('jsonls')
       vim.lsp.enable('tailwindcss')
