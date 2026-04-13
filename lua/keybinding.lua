@@ -39,5 +39,11 @@ map('n', '<leader>gh', '<CMD>diffget //2<CR>', { desc = "获取左侧差异" })
 map('n', '<leader>gl', '<CMD>diffget //3<CR>', { desc = "获取右侧差异" })
 map('n', '<leader>gp', '<CMD>Git push<CR>', { desc = "Git Push" })
 
+-- LSP (Neovim 0.12+)
+map("n", "gra", vim.lsp.buf.code_action, { desc = "Code Action" })
+map("n", "grn", vim.lsp.buf.rename, { desc = "Rename" })
+map("n", "grr", vim.lsp.buf.references, { desc = "References" })
+map("n", "gO", vim.lsp.buf.document_symbol, { desc = "Document Symbols" })
+
 -- Reload Neovim config
 map('n', '<leader>R', ':source $MYVIMRC<CR>', { desc = "重载配置" })

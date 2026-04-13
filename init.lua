@@ -1,6 +1,9 @@
 vim.g.mapleader = ","
 vim.opt.termguicolors = true
 
+-- Neovim 0.12+ autocomplete
+vim.o.autocomplete = true
+
 require("lazy_conf")
 
 -- 自动更新 Lazy 和 Mason（每天一次）
