@@ -4,6 +4,9 @@ vim.opt.termguicolors = true
 -- Neovim 0.12+ 内置 LSP 自动补全
 vim.o.autocomplete = true
 
+-- 系统依赖检查（新设备首次启动时提示缺少哪些工具）
+local deps_ok = require('check_deps').check()
+
 require("lazy_conf")
 
 -- 自动更新 Lazy 和 Mason（每天一次）
