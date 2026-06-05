@@ -1,9 +1,7 @@
-
 return {
   {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
-      'JoosepAlviste/nvim-ts-context-commentstring',
       "RRethy/nvim-treesitter-textsubjects",
     },
     build = ':TSUpdate',
@@ -14,7 +12,7 @@ return {
         auto_install = true,
         highlight = {
           enable = true,
-          additional_vim_regex_highlighting=false,
+          additional_vim_regex_highlighting = false,
         },
         ident = { enable = true },
         incremental_selection = {
@@ -26,12 +24,6 @@ return {
             scope_incremental = '<TAB>',
           }
         },
-        rainbow = {
-          enable = true,
-          extended_mode = true,
-          max_file_lines = nil,
-        },
-        
         textsubjects = {
           enable = true,
           prev_selection = ",",
@@ -43,12 +35,10 @@ return {
         },
       }
 
-      vim.wo.foldmethod = 'expr'
-      vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
-      vim.wo.foldlevel = 99
-
-      require('ts_context_commentstring').setup {}
-      vim.g.skip_ts_context_commentstring_module = true
+      -- Neovim 0.12+ 原生 treesitter 折叠
+      vim.o.foldmethod = 'expr'
+      vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+      vim.o.foldlevelstart = 99
     end
   },
 }
