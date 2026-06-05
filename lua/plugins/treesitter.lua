@@ -1,9 +1,6 @@
 return {
   {
     'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      "RRethy/nvim-treesitter-textsubjects",
-    },
     build = ':TSUpdate',
     config = function()
       require'nvim-treesitter.configs'.setup {
@@ -24,15 +21,7 @@ return {
             scope_incremental = '<TAB>',
           }
         },
-        textsubjects = {
-          enable = true,
-          prev_selection = ",",
-          keymaps = {
-            ["."] = "textsubjects-smart",
-            [";"] = "textsubjects-container-outer",
-            ["i;"] = "textsubjects-container-inner",
-          },
-        },
+
       }
 
       -- Neovim 0.12+ 原生 treesitter 折叠
