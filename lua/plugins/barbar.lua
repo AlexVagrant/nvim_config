@@ -19,10 +19,9 @@ return {
     map("n", "<space>h", ":BufferPrevious<CR>", opt)
     map("n", "<space>l", ":BufferNext<CR>", opt)
     map("n", "<space>c", ":BufferClose<CR>", opt)
-    map("n", "<leader>bc", ":bdelete!<CR>", opt)
-    map("n", "<leader>bh", ":BufferLineCloseLeft<CR>", opt)
-    map("n", "<leader>bl", ":BufferLineCloseRight<CR>", opt)
-    map("n", "<leader>bo", ":BufferLineCloseRight<CR>:BufferLineCloseLeft<CR>", opt)
-    map("n", "<leader>bp", ":BufferLinePickClose<CR>", opt)
+    map("n", "<leader>bc", ":BufferCloseAllButCurrent<CR>", opt)
+    map("n", "<leader>bh", ":BufferCloseLeft<CR>", opt)
+    map("n", "<leader>bl", ":BufferCloseRight<CR>", opt)
+    map("n", "<leader>bp", ":BufferPickClose<CR>", opt)
   end
 }

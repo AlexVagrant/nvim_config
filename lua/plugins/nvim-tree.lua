@@ -17,7 +17,6 @@ return {
       on_attach = on_attach,
       auto_reload_on_write = true,
       disable_netrw = false,
-      hijack_cursor = false,
       hijack_netrw = true,
       hijack_unnamed_buffer_when_opening = false,
       open_on_tab = true,

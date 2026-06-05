@@ -5,7 +5,7 @@ map("n", "<space>w", ":w<CR>", { desc = "保存文件" })
 map("n", "<space>qq", ":qa<CR>", { desc = "退出所有" })
 
 -- vim 移动快捷键
-map("n", "<leader>/", ":nohlsearch<CR>", { desc = "清除高亮" })
+map("n", "<leader>hc", ":nohlsearch<CR>", { desc = "清除高亮" })
 -- 窗口切换
 map("n", "<C-J>", "<C-W>j", { desc = "切换到下方窗口" })
 map("n", "<C-K>", "<C-W>k", { desc = "切换到上方窗口" })
