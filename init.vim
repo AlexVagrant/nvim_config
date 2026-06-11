@@ -402,7 +402,7 @@ let g:rust_cargo_use_clippy = 1
 "require('plugins')
 "require('rust-tools-configuration')
 lua << END
-require('evil_lualine')
-require('coc')
+pcall(require, 'evil_lualine')
+pcall(require, 'coc')
 END
 
