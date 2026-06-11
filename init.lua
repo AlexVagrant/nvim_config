@@ -48,7 +48,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
 require('keybinding')
 
-vim.cmd[[colorscheme sonokai]]
+vim.cmd[[colorscheme catppuccin-latte]]
 
 -- 设置透明背景（适用于所有主题）
 vim.api.nvim_create_autocmd("ColorScheme", {
