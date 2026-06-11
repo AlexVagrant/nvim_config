@@ -3,6 +3,7 @@ local map = vim.keymap.set
 -- basic
 map("n", "<space>w", ":w<CR>", { desc = "保存文件" })
 map("n", "<space>qq", ":qa<CR>", { desc = "退出所有" })
+map("n", "<space>b", ":buffers<CR>:b<space>", { desc = "切换缓冲区" })
 
 -- vim 移动快捷键
 map("n", "<leader>hc", ":nohlsearch<CR>", { desc = "清除高亮" })
@@ -21,6 +22,7 @@ map("n", "<leader>t", ':tabnew<CR>', { desc = "新建标签页" })
 map("v", "<leader>c", '"+y', { desc = "复制到剪贴板" })
 
 map("i", "jj", "<ESC>", { desc = "退出插入模式" })
+map("c", "jf", "<C-c>", { desc = "退出命令行模式" })
 
 --date
 map("n", '<leader>rd', 'i<C-R>=strftime("%Y-%m-%d %a")<CR><Esc>', { desc = "插入日期" })
