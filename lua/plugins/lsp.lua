@@ -99,9 +99,15 @@ return {
 
       vim.lsp.config("eslint", {
         on_attach = function(client, bufnr)
+          vim.api.nvim_create_user_command("EslintFixAll", function()
+            vim.lsp.buf.execute_command({
+              command = "eslint.applyAllFixes",
+              arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
+            })
+          end, {})
           vim.api.nvim_create_autocmd("BufWritePre", {
             buffer = bufnr,
-            command = "LspEslintFixAll",
+            command = "EslintFixAll",
           })
         end,
       })
