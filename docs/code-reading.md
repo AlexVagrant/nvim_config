@@ -34,13 +34,13 @@
 
 ### 步骤 1：找到入口
 
-用 `,ff` 打开 `packages/coding-agent/src/core/sdk.ts`。
+用 `,ff` 打开 `packages/coding-agent/examples/sdk/01-minimal.ts`。
 
-搜索 `sendMessage`（`/` 然后输入），找到函数定义。
+看到 `session.prompt("...")` 调用——这就是用户发消息的入口。
 
 ### 步骤 2：逐层下钻
 
-`sdk.ts` 中 `sendMessage` 调用了 `session.prompt(...)`，光标放到 `prompt` 上按 `gd`。
+光标放到 `prompt` 上，按 `gd` 跳转到定义。
 
 进入 `agent-session.ts`，按 `gO` 看文件大纲，找到 `prompt` 方法。
 
