@@ -15,6 +15,10 @@
 - **Telescope**: 高度可扩展的模糊查找器。
 - **主题**: 包含多种主题，如 Catppuccin、TokyoNight、Monokai 等。
 
+## 用 Neovim 阅读源码
+
+使用 LSP 导航、Telescope 搜索和数据流追踪等方法高效阅读大型代码库，详见 [docs/code-reading.md](docs/code-reading.md)。
+
 ## 前置条件
 
 在安装此配置之前，请确保您已安装以下软件：
