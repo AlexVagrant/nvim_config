@@ -22,8 +22,6 @@
 | 重命名符号 | `grn` | 项目范围重命名（0.11+ 内置） |
 | 代码操作 | `gra` | 快速修复、import 排序等（0.11+ 内置） |
 | 文档符号 | `gO` | 当前文件大纲（0.11+ 内置） |
-| 跳转到引用（Trouble 面板） | `,xw` | 带代码片段预览的引用列表 |
-| 切换诊断面板 | `,xx` | 项目范围的错误/警告列表 |
 | Telescope 文件查找 | `,ff` | 按文件名查找项目文件 |
 | Telescope 全局搜索 | `,fg` | 全文搜索（类似 `rg`） |
 | Telescope 搜索光标下单词 | `,sw` | 全项目搜索光标所在词 |
@@ -106,6 +104,5 @@ ma   " 在当前行设 mark a（小写字母 = 文件内，大写 = 跨文件）
 ## 相关工具
 
 - [ripgrep](https://github.com/BurntSushi/ripgrep) — Telescope live_grep 的底层引擎
-- [trouble.nvim](https://github.com/folke/trouble.nvim) — 漂亮的诊断和引用面板
 - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) — 语法高亮和结构化文本对象
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) — 模糊查找器
