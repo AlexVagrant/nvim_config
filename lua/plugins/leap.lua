@@ -5,6 +5,7 @@ return {
       local leap = require('leap')
       
       -- 设置选项
+      leap.opts.vim_opts['go.ignorecase'] = true  -- 替换已移除的 case_sensitive
       leap.opts.on_beacons = function(targets)
         for _, t in ipairs(targets) do
           if not t.label and not t.beacon and t.chars and t.is_previewable ~= false then
