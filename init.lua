@@ -48,7 +48,17 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
 require('keybinding')
 
-vim.cmd[[colorscheme catppuccin-latte]]
+-- 根据终端背景自动切换深/浅色主题（Neovim 内置 OSC 11 检测）
+vim.api.nvim_create_autocmd("OptionSet", {
+  pattern = "background",
+  callback = function()
+    if vim.o.background == "dark" then
+      vim.cmd.colorscheme("catppuccin-mocha")
+    else
+      vim.cmd.colorscheme("catppuccin-latte")
+    end
+  end,
+})
 
 -- 设置透明背景（适用于所有主题）
 vim.api.nvim_create_autocmd("ColorScheme", {

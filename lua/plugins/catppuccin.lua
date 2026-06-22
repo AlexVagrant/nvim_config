@@ -15,6 +15,5 @@ return {
         mason = true,
       },
     })
-    vim.cmd.colorscheme "catppuccin-latte"
   end,
 }
