@@ -97,6 +97,22 @@ return {
       vim.lsp.config('vtsls', vtsls_config)
       vim.lsp.enable({'vtsls', 'vue_ls'})
 
+      -- tailwindcss: 移除 vscode 命名 'erb'/'hbs' (nvim 中对应 eruby/handlebars, 已在列表中)
+      -- 及 nvim 永远不会产生的 vscode 专有 filetype (aspnetcorerazor/astro-markdown/django-html/html-eex/reason),
+      -- 其余与 lspconfig 默认列表一致, 消除 checkhealth 的 Unknown filetype 警告
+      vim.lsp.config('tailwindcss', { filetypes = {
+        'astro', 'blade', 'clojure', 'htmldjango', 'edge', 'eelixir', 'elixir', 'ejs',
+        'eruby', 'gohtml', 'gohtmltmpl', 'haml', 'handlebars', 'html', 'htmlangular',
+        'heex', 'jade', 'leaf', 'liquid', 'markdown', 'mdx', 'mustache', 'njk', 'nunjucks',
+        'php', 'razor', 'slim', 'twig', 'css', 'less', 'postcss', 'sass', 'scss', 'stylus',
+        'sugarss', 'javascript', 'javascriptreact', 'rescript', 'typescript',
+        'typescriptreact', 'vue', 'svelte', 'templ',
+      } })
+      vim.lsp.enable('tailwindcss')
+
+      -- clangd: 移除 c.doxygen/cpp.doxygen (nvim 不会自动产生, 仅在手动 setfiletype 时生效)
+      vim.lsp.config('clangd', { filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' } })
+
       vim.lsp.config("eslint", {
         on_attach = function(client, bufnr)
           vim.api.nvim_create_user_command("EslintFixAll", function()

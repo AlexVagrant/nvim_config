@@ -1,0 +1,5 @@
+#!/bin/sh
+# nvim perl provider wrapper: 注入 cpan local::lib (Neovim::Ext 装在 ~/perl5)
+# 参考: cpan 首次运行自动生成的 local::lib 配置
+export PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:$PERL5LIB}"
+exec /usr/bin/perl "$@"

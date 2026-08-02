@@ -9,6 +9,15 @@ local deps_ok = require('check_deps').check()
 
 require("lazy_conf")
 
+-- 注册 LSP 引用的文件类型 (消除 checkhealth 的 Unknown filetype 警告)
+require('filetypes')
+
+-- perl provider: 通过包装脚本注入 cpan local::lib (~/perl5), 使其能找到 Neovim::Ext
+vim.g.perl_host_prog = vim.fn.stdpath('config') .. '/scripts/perl-host'
+
+-- python provider: 专用 venv (pyenv 建议的最优配置, 避免 pynvim 散落在各环境)
+vim.g.python3_host_prog = vim.env.HOME .. '/.pyenv/versions/nvim-provider/bin/python'
+
 -- 自动更新 Lazy 和 Mason（每天一次）
 vim.api.nvim_create_autocmd("VimEnter", {
   once = true,

@@ -5,6 +5,9 @@ return {
   version = '^5',
   lazy = false,
   ft = { 'rust' },
+  dependencies = {
+    'mfussenegger/nvim-dap', -- rustaceanvim 调试功能所需 (checkhealth 提示)
+  },
   config = function()
     vim.g.rustaceanvim = {
       -- 插件配置
